@@ -37,6 +37,7 @@
 /qbin
 
 # sbt's target directories
+/databases_with_akka_http/.idea/
 /target/
 /project/**/target/
 /test/macro-annot/target/
@@ -45,6 +46,10 @@
 /build-sbt/
 local.sbt
 jitwatch.out
+databases_with_akka_http/null/
+databases_with_akka_http/project/target/
+databases_with_akka_http/target/
+
 
 # Used by the restarr/restarrFull commands as target directories
 /build-restarr/
