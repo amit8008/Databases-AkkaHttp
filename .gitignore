@@ -51,13 +51,4 @@ databases_with_akka_http/project/target/
 databases_with_akka_http/target/
 
 
-# Used by the restarr/restarrFull commands as target directories
-/build-restarr/
-/target-restarr/
-
-# metals
-.metals
-.bloop
-project/**/metals.sbt
-
 .bsp
