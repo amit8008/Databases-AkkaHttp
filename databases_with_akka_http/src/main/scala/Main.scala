@@ -4,13 +4,14 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Directives.{complete, path}
+import com.typesafe.scalalogging.Logger
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
 
 object Main extends App {
-  println("Accessing Database with Akka-http API")
-
+  val logger = Logger(getClass.getName)
+  logger.info("Accessing Database with Akka-http API")
   implicit val system = ActorSystem(Behaviors.empty, "my-system")
   // needed for the future flatMap/onComplete in the end
   implicit val executionContext: ExecutionContextExecutor = system.executionContext
