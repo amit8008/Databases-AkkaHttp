@@ -68,7 +68,7 @@ object DbConnection {
 //
 //  db.run(setup)
 
-  case class Movie(id: Int, name: String, year: Int)
+//  case class Movie(id: Int, name: String, year: Int)
   class Movies(tag: Tag) extends Table[(Int, String, Int)](tag, Option[String]("test01"), "movies") {
     def id = column[Int]("id")
     def name = column[String]("name")
@@ -84,7 +84,21 @@ object DbConnection {
   *  either successfully (Success) or with an error (Failure).
   * */
 
-  def getting_result(): Unit ={
+  val insertDataInMovies = DBIO.seq(
+    movies += (4, "movies4", 2009),
+    movies += (5, "movies5", 2003),
+    movies ++= Seq(
+      (6, "movies6", 2019),
+      (7, "movies7", 2015)
+    )
+  )
+
+  def insertResult()={
+    logger.info("Records are inserting")
+    db.run(insertDataInMovies)
+  }
+
+  def printResult() ={
     db.run(movies.result).onComplete {
       case Success(results) =>
         println("Query completed, processing results.")

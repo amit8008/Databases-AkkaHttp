@@ -25,7 +25,10 @@ object akkaServer extends App {
       }
     }
 
-  DbConnection.getting_result()
+//  DbConnection.printResult()
+  DbConnection.insertResult()
+
+
   val bindingFuture = Http().newServerAt("localhost", 8080)
     .bind(route1)
 
