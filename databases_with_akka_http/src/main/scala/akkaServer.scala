@@ -4,12 +4,14 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Directives.{complete, path}
+import com.amit.db.DbConnection
+//import com.amit.db.DbConnection.setupFuture
 import com.typesafe.scalalogging.Logger
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
 
-object Main extends App {
+object akkaServer extends App {
   val logger = Logger(getClass.getName)
   logger.info("Accessing Database with Akka-http API")
   implicit val system = ActorSystem(Behaviors.empty, "my-system")
@@ -23,8 +25,10 @@ object Main extends App {
       }
     }
 
+  DbConnection.getting_result()
   val bindingFuture = Http().newServerAt("localhost", 8080)
     .bind(route1)
+
 
   StdIn.readLine() // let it run until user presses return
   bindingFuture
