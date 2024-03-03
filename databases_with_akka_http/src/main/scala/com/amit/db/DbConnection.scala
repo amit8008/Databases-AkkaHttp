@@ -1,7 +1,9 @@
 package com.amit.db
 
 import com.typesafe.scalalogging.Logger
+import slick.dbio
 import slick.jdbc.MySQLProfile.api._
+import slick.lifted.AbstractTable
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
@@ -68,7 +70,7 @@ object DbConnection {
 //
 //  db.run(setup)
 
-  case class Movie(id: Int, name: String, year: Int)
+//  case class Movie(id: Int, name: String, year: Int)
   class Movies(tag: Tag) extends Table[(Int, String, Int)](tag, Option[String]("test01"), "movies") {
     def id = column[Int]("id")
     def name = column[String]("name")
@@ -84,14 +86,55 @@ object DbConnection {
   *  either successfully (Success) or with an error (Failure).
   * */
 
-  def getting_result(): Unit ={
-    db.run(movies.result).onComplete {
-      case Success(results) =>
+  val insertDataInMovies = DBIO.seq(
+    movies += (4, "movies4", 2009),
+    movies += (5, "movies5", 2003),
+    movies ++= Seq(
+      (6, "movies6", 2019),
+      (7, "movies7", 2015)
+    )
+  )
+
+  val insertDataInCoffees = DBIO.seq(
+    coffees ++= Seq(
+      ("Indian",         101, 7.99, 0, 0),
+      ("Indian_Roast",       49, 8.99, 0, 0),
+      ("Indian_Espresso",          150, 9.99, 0, 0),
+      ("Indian_Decaf",   101, 8.99, 0, 0),
+      ("India_Roast_Decaf", 49, 9.99, 0, 0)
+    )
+  )
+
+  def insertResult[R, S <: dbio.NoStream, E <: dbio.Effect](insertSeq: DBIOAction[R, S, E])={
+    logger.info("Records are inserting")
+    db.run(insertSeq)
+  }
+
+  val q1 = coffees.filter(_.supID === 101)
+  val results = db.run(q1.result)
+//    results.foreach(println)
+  movies.result
+
+
+  def printResult[T <: AbstractTable[_], E, U, C[_]](table: Option[TableQuery[T]] = None,
+                                                     query: Option[Query[E, U, C]] = None) ={
+    (table, query) match {
+      case (Some(table), None) => {
+        db.run(table.result).onComplete {
+          case Success(results) =>
+            println("Query completed, processing results.")
+            results.foreach(println)
+          case Failure(exception) =>
+            println(s"Error executing query: $exception")
+        }
+      }
+      case (None, Some(query)) => {
         println("Query completed, processing results.")
-        results.foreach(println)
-      case Failure(exception) =>
-        println(s"Error executing query: $exception")
+        db.run(query.result).foreach(println)
+        }
+
     }
+
   }
 
 //  val results = Await.result(db.run(movies.result), Duration.Inf)
