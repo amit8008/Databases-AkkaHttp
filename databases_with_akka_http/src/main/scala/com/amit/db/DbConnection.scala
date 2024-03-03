@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object DbConnection extends App {
 
   val logger = Logger(getClass.getName)
-  val db = Database.forConfig("mySqlDb1")
+  val db = Database.forConfig("mySqlDb")
   val resultSet = db.createSession().prepareStatement("select * from movies").executeQuery()
   while( resultSet.next()) {
     println(s"${resultSet.getInt("id")}\t ${resultSet.getString(s"name")}\t${resultSet.getInt("year")}")
@@ -89,9 +89,6 @@ object DbConnection extends App {
 
   val results = Await.result(db.run(movies.result), Duration.Inf)
   results.foreach(println)
-
-
-  val ookp = movies.filter(_.id > 0).take(1)
   logger.info("This file is completed")
 
 //  db.close()
