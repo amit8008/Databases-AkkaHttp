@@ -18,6 +18,6 @@ lazy val root = (project in file("."))
       "com.typesafe.slick" %% "slick" % slickVersion,
       "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
       "com.typesafe" % "config" % "1.4.2",
-      "mysql" % "mysql-connector-java" % "6.0.6"
+      "mysql" % "mysql-connector-java" % "8.0.33"
     )
   )

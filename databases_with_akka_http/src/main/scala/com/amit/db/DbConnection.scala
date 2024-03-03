@@ -1,7 +1,6 @@
 package com.amit.db
 
 import com.typesafe.scalalogging.Logger
-import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -10,7 +9,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object DbConnection extends App {
 
   val logger = Logger(getClass.getName)
-  logger.info("Accessing Database with Akka-http API")
   val db = Database.forConfig("mydb")
 
   // Definition of the SUPPLIERS table
