@@ -5,6 +5,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Directives.{complete, path}
 import com.amit.db.DbConnection
+import com.amit.db.DbConnection.{coffees, insertDataInCoffees, movies}
 //import com.amit.db.DbConnection.setupFuture
 import com.typesafe.scalalogging.Logger
 
@@ -25,8 +26,8 @@ object akkaServer extends App {
       }
     }
 
-//  DbConnection.printResult()
-  DbConnection.insertResult()
+  DbConnection.insertResult(insertDataInCoffees)
+  DbConnection.printResult(coffees)
 
 
   val bindingFuture = Http().newServerAt("localhost", 8080)

@@ -1,7 +1,9 @@
 package com.amit.db
 
 import com.typesafe.scalalogging.Logger
+import slick.dbio
 import slick.jdbc.MySQLProfile.api._
+import slick.lifted.AbstractTable
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
@@ -93,13 +95,23 @@ object DbConnection {
     )
   )
 
-  def insertResult()={
+  val insertDataInCoffees = DBIO.seq(
+    coffees ++= Seq(
+      ("Indian",         101, 7.99, 0, 0),
+      ("Indian_Roast",       49, 8.99, 0, 0),
+      ("Indian_Espresso",          150, 9.99, 0, 0),
+      ("Indian_Decaf",   101, 8.99, 0, 0),
+      ("India_Roast_Decaf", 49, 9.99, 0, 0)
+    )
+  )
+
+  def insertResult[R, S <: dbio.NoStream, E <: dbio.Effect](insertSeq: DBIOAction[R, S, E])={
     logger.info("Records are inserting")
-    db.run(insertDataInMovies)
+    db.run(insertSeq)
   }
 
-  def printResult() ={
-    db.run(movies.result).onComplete {
+  def printResult[T <: AbstractTable[_]](table: TableQuery[T]) ={
+    db.run(table.result).onComplete {
       case Success(results) =>
         println("Query completed, processing results.")
         results.foreach(println)
