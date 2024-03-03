@@ -1,0 +1,6 @@
+docker run --name test1-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password123 -d mysql:latest
+
+docker exec -it test1-mysql bash
+
+mysql -u root -p
+
