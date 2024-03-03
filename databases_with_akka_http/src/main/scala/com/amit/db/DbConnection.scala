@@ -95,7 +95,7 @@ val setup = DBIO.seq(
 //  val results = Await.result(db.run(movies.result), Duration.Inf)
 //  results.foreach(println)
   logger.info("This file is completed")
-//  Thread.sleep(2000)
+  Thread.sleep(5000)
 
 //  db.close()
 }
