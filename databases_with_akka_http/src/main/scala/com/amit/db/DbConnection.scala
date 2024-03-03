@@ -110,14 +110,31 @@ object DbConnection {
     db.run(insertSeq)
   }
 
-  def printResult[T <: AbstractTable[_]](table: TableQuery[T]) ={
-    db.run(table.result).onComplete {
-      case Success(results) =>
+  val q1 = coffees.filter(_.supID === 101)
+  val results = db.run(q1.result)
+//    results.foreach(println)
+  movies.result
+
+
+  def printResult[T <: AbstractTable[_], E, U, C[_]](table: Option[TableQuery[T]] = None,
+                                                     query: Option[Query[E, U, C]] = None) ={
+    (table, query) match {
+      case (Some(table), None) => {
+        db.run(table.result).onComplete {
+          case Success(results) =>
+            println("Query completed, processing results.")
+            results.foreach(println)
+          case Failure(exception) =>
+            println(s"Error executing query: $exception")
+        }
+      }
+      case (None, Some(query)) => {
         println("Query completed, processing results.")
-        results.foreach(println)
-      case Failure(exception) =>
-        println(s"Error executing query: $exception")
+        db.run(query.result).foreach(println)
+        }
+
     }
+
   }
 
 //  val results = Await.result(db.run(movies.result), Duration.Inf)
