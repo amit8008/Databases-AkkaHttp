@@ -78,18 +78,24 @@ object DbConnection extends App {
 
   val movies = TableQuery[Movies]
 
-//  val q = for (c <- movies) yield c.name
-//  val a = q.result
-//  val f: Future[Seq[String]] = db.run(a)
-//
-//  f.onComplete {
-//    case Success(s) => println(s"Result: $s")
-//    case Failure(t) => t.printStackTrace()
-//  }
+  /*
+  * onComplete attaches a callback function to the Future.
+  *  This function will be invoked once the Future completes,
+  *  either successfully (Success) or with an error (Failure).
+  * */
+  db.run(movies.result).onComplete {
+    case Success(results) =>
+      println("Query completed, processing results.")
+      results.foreach(println)
+    case Failure(exception) =>
+      println(s"Error executing query: $exception")
+  }
 
-  val results = Await.result(db.run(movies.result), Duration.Inf)
-  results.foreach(println)
+
+//  val results = Await.result(db.run(movies.result), Duration.Inf)
+//  results.foreach(println)
   logger.info("This file is completed")
+  Thread.sleep(2000)
 
 //  db.close()
 }
